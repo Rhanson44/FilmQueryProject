@@ -23,7 +23,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Connection conn;
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
-			String sqltext = "SELECT film.title, film.release_year, film.rating, film.description FROM film WHERE film.id = ?";
+			String sqltext = "SELECT film.title, film.release_year, film.rating, film.description, language.name FROM film JOIN language ON film.language_id = language.id WHERE film.id = ?";
 
 			PreparedStatement stmt = conn.prepareStatement(sqltext);
 			stmt.setInt(1, filmId);
@@ -35,6 +35,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setReleaseYear(rs.getInt(2));
 				film.setRating(rs.getString(3));
 				film.setDescription(rs.getString(4));
+				film.setActors(findActorsByFilmId(filmId));
+				film.setLanguage(rs.getString(5));
 			}
 
 			rs.close();
@@ -80,7 +82,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Connection conn;
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
-			String sqltext = "SELECT actor.first_name, actor.last_name FROM actor WHERE film.id = ?";
+			String sqltext = "SELECT actor.id, actor.first_name, actor.last_name FROM actor JOIN film_actor ON actor.id = film_actor.actor_id JOIN film ON film.id = film_actor.film_id WHERE film.id = ?";
 
 			PreparedStatement stmt = conn.prepareStatement(sqltext);
 			stmt.setInt(1, filmId);
@@ -110,18 +112,22 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		keyword = "%" + keyword + "%";
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
-			String sqltext = "SELECT film.title, film.release_year, film.rating, film.description FROM film WHERE film.title LIKE ?";
+			String sqltext = "SELECT film.id, film.title, film.release_year, film.rating, film.description, language.name FROM film JOIN language ON film.language_id = language.id WHERE film.title LIKE ? OR film.description LIKE ?";
 
 			PreparedStatement stmt = conn.prepareStatement(sqltext);
 			stmt.setString(1, keyword);
+			stmt.setString(2, keyword);
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
 				Film film = new Film();
-				film.setTitle(rs.getString(1));
-				film.setReleaseYear(rs.getInt(2));
-				film.setRating(rs.getString(3));
-				film.setDescription(rs.getString(4));
+				film.setId(rs.getInt(1));
+				film.setTitle(rs.getString(2));
+				film.setReleaseYear(rs.getInt(3));
+				film.setRating(rs.getString(4));
+				film.setDescription(rs.getString(5));
+				film.setLanguage(rs.getString(6));
+				film.setActors(findActorsByFilmId(film.getId()));
 				films.add(film);
 			}
 			

@@ -15,15 +15,25 @@ public class Film {
 	private double replacementCost;
 	private String rating;
 	private String specialFeatures;
+	private String language;
 	private List<Actor> actors;
 	
 	public Film() {}
 	
-	public Film(String title, int releaseYear, String rating, String description) {
+	public Film(String title, int releaseYear, String rating, String description, String language) {
 		this.title = title;
 		this.releaseYear = releaseYear;
 		this.rating = rating;
 		this.description = description;
+		this.language = language;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public Film(int id, String title, String description, int releaseYear, int languageId, int rentalDuration,
@@ -167,7 +177,8 @@ public class Film {
 	public String toString() {
 		return "Film [title=" + title + ", description=" + description + ", releaseYear=" + releaseYear
 				+ ", rating=" + rating
-				+ "actors=" + actors + "]";
+				+ ", language=" + language
+				+ ", actors=" + actors + "]\n";
 	}
 
 	
