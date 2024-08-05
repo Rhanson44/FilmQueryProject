@@ -34,7 +34,7 @@ width= "50" height= "50"> Git </p>
 
 ## Lessons Learned
 
-Expanded understanding of Java Database Connectivity configuration
-Reinforced SQL language competency
-Object-Relational Mapping implementation and design
+- Expanded understanding of Java Database Connectivity configuration
+- Reinforced SQL language competency
+- Object-Relational Mapping implementation and design
 
